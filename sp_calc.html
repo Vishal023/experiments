@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Effort Calculator</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          max-width: 1000px;
+          margin: 50px auto;
+          padding: 20px;
+      }
+      .container {
+          display: flex;
+          justify-content: space-between;
+          gap: 20px;
+      }
+      .calculator {
+          flex: 1;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          background-color: #f4f4f4;
+          max-width: 45%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 300px;
+      }
+      .input-group {
+          margin-bottom: 15px;
+      }
+      .input-group label {
+          display: block;
+          margin-bottom: 5px;
+      }
+      .input-group input {
+          width: 100%;
+          padding: 8px;
+          box-sizing: border-box;
+      }
+      .result {
+          margin-top: 20px;
+          padding: 10px;
+          background-color: #e6e6e6;
+          border-radius: 5px;
+      }
+      .spacer {
+          height: 65px; /* Adjust this based on the height of an input field */
+      }
+      .result-line {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 10px;
+      }
+      .copy-button {
+          margin-left: 10px;
+          padding: 5px 10px;
+          cursor: pointer;
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+      }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- First Calculator: Hours and Minutes to Story Points -->
+  <div class="calculator">
+    <div class="input-group">
+      <label for="hoursSpent">Hour Spent</label>
+      <input type="number" id="hoursSpent" placeholder="Enter hours spent" oninput="calculateEffort()">
+    </div>
+
+    <div class="input-group">
+      <label for="minutesSpent">Minutes Spent</label>
+      <input type="number" id="minutesSpent" placeholder="Enter minutes spent" oninput="calculateEffort()">
+    </div>
+
+    <div class="result">
+      <div class="result-line">
+        <p><strong>Equivalent SP (hour-based):</strong> <span id="spHour">0</span></p>
+        <button class="copy-button" onclick="copyToClipboard('spHour')">Copy</button>
+      </div>
+
+      <div class="result-line">
+        <p><strong>Equivalent SP (minute-based):</strong> <span id="spMinute">0</span></p>
+        <button class="copy-button" onclick="copyToClipboard('spMinute')">Copy</button>
+      </div>
+
+      <div class="result-line">
+        <p><strong>Combined SP (hour + minute):</strong> <span id="spCombined">0</span></p>
+        <button class="copy-button" onclick="copyToClipboard('spCombined')">Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // First Calculator: Convert Hours + Minutes to Story Points
+  function calculateEffort() {
+    const hoursSpent = parseFloat(document.getElementById('hoursSpent').value) || 0;
+    const minutesSpent = parseFloat(document.getElementById('minutesSpent').value) || 0;
+
+    // SP calculation logic
+    const spHourBased = (1/8) * hoursSpent;
+    const spMinuteBased = (1/480) * minutesSpent;
+    const spCombined = spHourBased + spMinuteBased;
+
+    // Display individual SPs
+    document.getElementById('spHour').textContent = spHourBased.toFixed(4);
+    document.getElementById('spMinute').textContent = spMinuteBased.toFixed(4);
+
+    // Display combined SP
+    document.getElementById('spCombined').textContent = spCombined.toFixed(4);
+  }
+
+  // Copy result to clipboard
+  function copyToClipboard(elementId) {
+    const valueToCopy = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(valueToCopy).then(() => {
+      // alert('Copied: ' + valueToCopy);
+    }).catch(err => {
+      console.error('Could not copy text: ', err);
+    });
+  }
+</script>
+
+</body>
+</html>
